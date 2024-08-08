@@ -1,0 +1,75 @@
+CREATE DATABASE IF NOT EXISTS invoices_and_appointments_management_system;
+USE invoices_and_appointments_management_system;
+
+CREATE TABLE users
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(25) NOT NULL,
+    email VARCHAR(30) NOT NULL UNIQUE,
+    password VARCHAR(20) NOT NULL,
+    role VARCHAR(8) CHECK ( role = 'admin' OR role = 'customer')
+);
+CREATE TABLE companies
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(30) NOT NULL UNIQUE,
+    phone_number VARCHAR(15) NOT NULL
+);
+CREATE TABLE appointments
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    appointment_number VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(30) NOT NULL,
+    date_of_appointment VARCHAR(10) NOT NULL,
+    company_id INT,
+    user_id INT,
+    FOREIGN KEY (company_id) REFERENCES companies(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+CREATE TABLE invoices
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    invoice_number VARCHAR(50) NOT NULL UNIQUE,
+    store_name VARCHAR(40) NOT NULL ,
+    type_product VARCHAR(40) NOT NULL ,
+    invoice_issuance_date VARCHAR(10) NOT NULL ,
+    warranty_expiration_date VARCHAR(10) NOT NULL ,
+    url_image VARCHAR(1000),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    company_id INT,
+    user_id INT,
+    FOREIGN KEY (company_id) REFERENCES companies(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+
+INSERT INTO users(username, email, password, role)
+VALUES ('abdabd1','abdabd1@gmail.com','abdabd1110','admin'),
+       ('abdabd2','abdabd2@gmail.com','abdabd2110','customer'),
+       ('abdabd3','abdabd3@gmail.com','abdabd3110','customer'),
+       ('abdabd4','abdabd4@gmail.com','abdabd4110','admin'),
+       ('abdabd5','abdabd5@gmail.com','abdabd5110','customer');
+INSERT INTO companies(name, email, phone_number)
+VALUES ('apple','apple_0@apple.com','+1 632544310'),
+       ('aramco','aramco_0@aramco.com','+966 562111977'),
+       ('facebook','facebook_0@facebook.com','+1 631200010'),
+       ('x','x_0@x.com','+1 609126650'),
+       ('stc','stc_0@stc.com','+966 555000550');
+INSERT INTO appointments(appointment_number, name, date_of_appointment, company_id, user_id)
+VALUES ('87324632784','just talk','2024-12-12',2,5),
+       ('87124632784','just talk','2024-12-12',2,3),
+       ('87324668984','just talk','2024-12-12',5,2),
+       ('87586755404','just talk','2024-12-12',5,3),
+       ('87324876511','just talk','2024-12-12',1,2);
+INSERT INTO invoices
+(invoice_number, store_name, type_product, invoice_issuance_date, warranty_expiration_date, url_image, company_id, user_id)
+VALUES ('1232432','apple','smart phone','2022-01-01','2024-01-01','https://www.moh.gov.sa/eServices/Sehhaty/PublishingImages/2022-08-04-001.png',1,2),
+       ('1231232','apple','smart phone','2022-01-01','2024-01-01','https://www.moh.gov.sa/eServices/Sehhaty/PublishingImages/2022-08-04-001.png',3,2),
+       ('1265432','facebook','meta','2022-01-01','2024-01-01','https://www.moh.gov.sa/eServices/Sehhaty/PublishingImages/2022-08-04-001.png',2,5),
+       ('1235474','stc','enter net','2022-01-01','2024-01-01','https://www.moh.gov.sa/eServices/Sehhaty/PublishingImages/2022-08-04-001.png',5,3),
+       ('0023432','stc','enter net','2022-01-01','2024-01-01','https://www.moh.gov.sa/eServices/Sehhaty/PublishingImages/2022-08-04-001.png',4,5);
+
+UPDATE users SET password = 'admin000' WHERE role = 'admin';
+UPDATE companies SET name = 'snapchat' WHERE name = 'facebook';
+DELETE FROM appointments WHERE company_id = 5 OR user_id = 2;
+DELETE FROM invoices WHERE type_product = 'meta';
